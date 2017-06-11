@@ -44,6 +44,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
         toMap = (RadioButton) view.findViewById(R.id.radio_toMap);
         toNew= (RadioButton) view.findViewById(R.id.radio_toNew);
         toMy= (RadioButton) view.findViewById(R.id.radio_toMy);
+        toMap.setChecked(true);
         toMap.setOnClickListener(this);
         toNew.setOnClickListener(this);
         toMy.setOnClickListener(this);

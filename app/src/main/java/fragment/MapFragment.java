@@ -2,6 +2,7 @@ package fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,13 +20,11 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 
-import com.amap.api.maps.AMap;
-import com.amap.api.maps.LocationSource;
-import com.amap.api.maps.MapView;
-import com.amap.api.maps.UiSettings;
+
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
+import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.BusRouteResult;
@@ -33,19 +32,25 @@ import com.amap.api.services.route.DriveRouteResult;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
+import com.example.duzeming.carhelper.FindingActivity;
+import com.example.duzeming.carhelper.MainActivity;
 import com.example.duzeming.carhelper.R;
 
 /**
  * Created by DuZeming on 2017/4/27.
  */
 public class MapFragment extends Fragment implements com.amap.api.maps2d.LocationSource,AMapLocationListener, com.amap.api.maps2d.AMap.OnMapClickListener
-, com.amap.api.maps2d.AMap.OnMarkerClickListener, com.amap.api.maps2d.AMap.OnInfoWindowClickListener, com.amap.api.maps2d.AMap.InfoWindowAdapter,RouteSearch.OnRouteSearchListener{
+, com.amap.api.maps2d.AMap.OnMarkerClickListener, com.amap.api.maps2d.AMap.OnInfoWindowClickListener,
+        com.amap.api.maps2d.AMap.InfoWindowAdapter,RouteSearch.OnRouteSearchListener{
     private com.amap.api.maps2d.MapView mapView;
     private com.amap.api.maps2d.AMap aMap;
     private com.amap.api.maps2d.UiSettings mUiSettings;
     private OnLocationChangedListener mListener;
     private AMapLocationClient mapLocationClient;
     private AMapLocationClientOption mapLocationClientOption;
+    private MarkerOptions markerOptions;
+    private LatLng latlng = new LatLng(39.91746, 116.396481);
+
 
 
     private Context mContext;
@@ -68,10 +73,12 @@ public class MapFragment extends Fragment implements com.amap.api.maps2d.Locatio
         mapView = (com.amap.api.maps2d.MapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
 
+
         if (aMap == null){
             aMap=mapView.getMap();
             mUiSettings=aMap.getUiSettings();
             setUpMap();
+            addMarkersToMap();
         }
         mUiSettings.setScrollGesturesEnabled(true);
         mUiSettings.setZoomGesturesEnabled(true);
@@ -93,6 +100,14 @@ public class MapFragment extends Fragment implements com.amap.api.maps2d.Locatio
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // aMap.setMyLocationType()
+    }
+    private void addMarkersToMap() {
+
+        markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                .position(latlng)
+                .draggable(true);
+        aMap.addMarker(markerOptions);
     }
 
     @Override
@@ -180,12 +195,10 @@ public class MapFragment extends Fragment implements com.amap.api.maps2d.Locatio
     @Override
     public void onMapClick(LatLng latLng) {
 
+
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return false;
-    }
+
 
     @Override
     public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
@@ -205,5 +218,12 @@ public class MapFragment extends Fragment implements com.amap.api.maps2d.Locatio
     @Override
     public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
 
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Intent intent = new Intent(getContext(),FindingActivity.class);
+        startActivity(intent);
+        return true;
     }
 }
