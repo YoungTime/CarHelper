@@ -21,6 +21,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 
 
+import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
@@ -83,6 +84,16 @@ public class MapFragment extends Fragment implements com.amap.api.maps2d.Locatio
         mUiSettings.setScrollGesturesEnabled(true);
         mUiSettings.setZoomGesturesEnabled(true);
 
+        AMap.OnMarkerClickListener markerClickListener = new AMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent intent = new Intent(getContext(),FindingActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        };
+        aMap.setOnMarkerClickListener(markerClickListener);
+
 
         return view;
     }
@@ -106,6 +117,9 @@ public class MapFragment extends Fragment implements com.amap.api.maps2d.Locatio
         markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                 .position(latlng)
+                .title("北京")
+                .snippet("北京大型停车场")
+                .draggable(true)
                 .draggable(true);
         aMap.addMarker(markerOptions);
     }
